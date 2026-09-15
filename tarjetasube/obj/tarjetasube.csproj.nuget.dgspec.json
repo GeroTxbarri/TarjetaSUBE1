@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE/tarjetasube/tarjetasube.csproj": {}
+    "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE1/tarjetasube/tarjetasube.csproj": {}
   },
   "projects": {
-    "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE/tarjetasube/tarjetasube.csproj": {
+    "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE1/tarjetasube/tarjetasube.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE/tarjetasube/tarjetasube.csproj",
+        "projectUniqueName": "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE1/tarjetasube/tarjetasube.csproj",
         "projectName": "tarjetasube",
-        "projectPath": "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE/tarjetasube/tarjetasube.csproj",
+        "projectPath": "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE1/tarjetasube/tarjetasube.csproj",
         "packagesPath": "/home/geronimo/.nuget/packages/",
-        "outputPath": "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE/tarjetasube/obj/",
+        "outputPath": "/home/geronimo/Codigos/codigos2026/poo/TarjetaSUBE1/tarjetasube/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/geronimo/.nuget/NuGet/NuGet.Config"

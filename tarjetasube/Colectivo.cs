@@ -1,12 +1,12 @@
-public class Colectivo{
-    public int linea_numero;
+public class Colectivo
+{
+    private int Tarifa = 1580;
 
-    public Boleto pagarCon (Tarjeta tarjeta){
-        tarjeta.descontarSaldo(1580);
+    public int Linea_numero { get; set; }
 
-        return new Boleto(1580, linea_numero);
+    public Boleto pagarCon(Tarjeta tarjeta)
+    {
+        tarjeta.descontarSaldo(Tarifa);
+        return new Boleto(Tarifa, Linea_numero);
     }
-
 }
-
-

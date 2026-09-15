@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("tarjetasube")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49bcc438695e547f698774ee7df9dced35a79685")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9b3fe5e23341fc92ecf16c1e7612ab043bd0d8cd")]
 [assembly: System.Reflection.AssemblyProductAttribute("tarjetasube")]
 [assembly: System.Reflection.AssemblyTitleAttribute("tarjetasube")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,10 +1,11 @@
-public class Boleto {
+public class Boleto
+{
+    public int Tarifa { get; }
+    public int LineaColectivo { get; }
 
-    public int Tarifa;
-    public int Linea_colectivo;
-
-    public Boleto (int tarifa, int linea_colectivo){
-        Tarifa=tarifa;
-        Linea_colectivo = linea_colectivo;
+    public Boleto(int tarifa, int lineaColectivo)
+    {
+        Tarifa = tarifa;
+        LineaColectivo = lineaColectivo;
     }
 }

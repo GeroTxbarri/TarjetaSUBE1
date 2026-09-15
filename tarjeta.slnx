@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="tarjetasube/tarjetasube.csproj" />
+  <Project Path="tarjetaSubeTest/tarjetaSubeTest.csproj" />
+</Solution>
