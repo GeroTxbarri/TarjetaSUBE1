@@ -1,4 +1,4 @@
-// Simulación básica del sistema de Tarjeta SUBE
+// Simulación básica del sistema de Tarjeta SUBE 
 
 var tarjeta = new Tarjeta();
 
