@@ -6,7 +6,8 @@ public class Colectivo
 
     public Boleto pagarCon(Tarjeta tarjeta)
     {
-        tarjeta.descontarSaldo(Tarifa);
-        return new Boleto(Tarifa, Linea_numero);
+        int precio = tarjeta.calcularPrecio(Tarifa);
+        tarjeta.descontarSaldo(precio);
+        return new Boleto(precio, Linea_numero);
     }
 }
