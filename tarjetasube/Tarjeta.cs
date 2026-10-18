@@ -6,13 +6,13 @@ public class Tarjeta {
 
     public void cargarTarjeta (int monto){
         
-        if (montoValidos.Contains(monto) && Saldo+monto <=40000 && Saldo >= 0){
+        if (montoValidos.Contains(monto) && Saldo+monto <=40000 ){
             Saldo += monto;
         }
         
     }
     public void descontarSaldo (int monto){
-        if (Saldo >= monto){
+        if ((Saldo - monto) >= -2000){
             Saldo -= monto;
             return;
         }
