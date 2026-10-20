@@ -60,7 +60,7 @@ public class TarjetaTests
         tarjeta.cargarTarjeta(2000);
         tarjeta.descontarSaldo(1580);
         tarjeta.descontarSaldo(1580);
-        tarjeta.cargarTarjeta(2000)
+        tarjeta.cargarTarjeta(2000);
 
         Assert.That(tarjeta.Saldo, Is.EqualTo(840));
 

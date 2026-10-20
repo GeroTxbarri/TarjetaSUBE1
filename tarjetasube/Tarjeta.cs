@@ -11,11 +11,13 @@ public class Tarjeta {
         }
         
     }
-    public void descontarSaldo (int monto){
+    public bool descontarSaldo (int monto){
         if ((Saldo - monto) >= -2000){
             Saldo -= monto;
-            return;
+            return true;
         }
+
+        return false;
 
          
     }

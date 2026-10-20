@@ -4,12 +4,11 @@ public class Colectivo
 
     public int Linea_numero { get; set; }
 
-    public bool pagarCon(Tarjeta tarjeta)
+    public dynamic pagarCon(Tarjeta tarjeta)
     {
-        if(Tarjeta.Saldo < Tarifa){
+        if(!tarjeta.descontarSaldo(Tarifa)){
             return false;
         }
-        tarjeta.descontarSaldo(Tarifa);
-        return true;
+        return new Boleto(Tarifa, Linea_numero);
     }
 }
