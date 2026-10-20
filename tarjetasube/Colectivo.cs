@@ -6,9 +6,11 @@ public class Colectivo
 
     public dynamic pagarCon(Tarjeta tarjeta)
     {
-        if(!tarjeta.descontarSaldo(Tarifa)){
+        int precio = tarjeta.calcularPrecio(Tarifa);
+        if (!tarjeta.descontarSaldo(precio))
+        {
             return false;
         }
-        return new Boleto(Tarifa, Linea_numero);
+        return new Boleto(precio, Linea_numero);
     }
 }
