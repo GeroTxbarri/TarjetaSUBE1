@@ -18,7 +18,7 @@ Console.WriteLine($"Saldo (sin cambios): ${tarjeta.Saldo}");
 var colectivo = new Colectivo { Linea_numero = 67 };
 Console.WriteLine($"\nViajando en colectivo línea {colectivo.Linea_numero}...");
 var boleto = colectivo.pagarCon(tarjeta);
-Console.WriteLine($"Boleto emitido — Tarifa: ${boleto.Tarifa} | Línea: {boleto.LineaColectivo}");
+Console.WriteLine($"Boleto emitido — Total abonado: ${boleto.TotalAbonado} | Línea: {boleto.LineaColectivo}");
 Console.WriteLine($"Saldo restante: ${tarjeta.Saldo}");
 
 // Intento de viaje sin saldo suficiente
@@ -27,6 +27,6 @@ tarjeta.descontarSaldo(tarjeta.Saldo); // vaciamos
 Console.WriteLine($"Saldo actual: ${tarjeta.Saldo}");
 var boletoDenegado = colectivo.pagarCon(tarjeta);
 Console.WriteLine($"Saldo después del intento: ${tarjeta.Saldo} (no descontó)");
-Console.WriteLine($"Tarifa del boleto: ${boletoDenegado.Tarifa} (boleto generado igual — ver nota)");
+Console.WriteLine($"Total abonado del boleto: ${boletoDenegado.TotalAbonado} (boleto generado igual — ver nota)");
 
 Console.WriteLine("\n=== Fin de la simulación ===");

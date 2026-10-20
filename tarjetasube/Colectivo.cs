@@ -11,6 +11,6 @@ public class Colectivo
         {
             return false;
         }
-        return new Boleto(precio, Linea_numero);
+        return new Boleto(precio, Linea_numero, tarjeta);
     }
 }
