@@ -13,6 +13,6 @@ public class ColectivoTests
         var boleto = colectivo.pagarCon(tarjeta);
 
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 1580));
-        Assert.That(boleto.Tarifa, Is.EqualTo(1580));
+        Assert.That(boleto.TotalAbonado, Is.EqualTo(1580));
     }
 }

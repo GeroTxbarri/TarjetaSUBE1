@@ -13,7 +13,7 @@ public class TarjetaTipoTests
         var boleto = colectivo.pagarCon(tarjeta);
 
         Assert.That(tarjeta.TarjetaTipoId, Is.EqualTo(1));
-        Assert.That(boleto.Tarifa, Is.EqualTo(1580));
+        Assert.That(boleto.TotalAbonado, Is.EqualTo(1580));
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 1580));
     }
 
@@ -40,9 +40,9 @@ public class TarjetaTipoTests
         var boleto2 = colectivo.pagarCon(tarjeta);
         var boleto3 = colectivo.pagarCon(tarjeta);
 
-        Assert.That(boleto1.Tarifa, Is.EqualTo(1580 / 2));
-        Assert.That(boleto2.Tarifa, Is.EqualTo(1580 / 2));
-        Assert.That(boleto3.Tarifa, Is.EqualTo(1580 / 2));
+        Assert.That(boleto1.TotalAbonado, Is.EqualTo(1580 / 2));
+        Assert.That(boleto2.TotalAbonado, Is.EqualTo(1580 / 2));
+        Assert.That(boleto3.TotalAbonado, Is.EqualTo(1580 / 2));
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 790 * 3));
     }
 
@@ -58,7 +58,7 @@ public class TarjetaTipoTests
         {
             var boleto = colectivo.pagarCon(tarjeta);
 
-            Assert.That(boleto.Tarifa, Is.EqualTo(0));
+            Assert.That(boleto.TotalAbonado, Is.EqualTo(0));
             Assert.That(tarjeta.Saldo, Is.EqualTo(0));
         }
     }
@@ -73,7 +73,7 @@ public class TarjetaTipoTests
         var colectivo = new Colectivo { Linea_numero = 67 };
         var boleto = colectivo.pagarCon(tarjeta);
 
-        Assert.That(boleto.Tarifa, Is.EqualTo(0));
+        Assert.That(boleto.TotalAbonado, Is.EqualTo(0));
         Assert.That(tarjeta.Saldo, Is.EqualTo(2000));
     }
 }

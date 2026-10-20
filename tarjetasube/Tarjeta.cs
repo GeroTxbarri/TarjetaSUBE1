@@ -1,7 +1,7 @@
 public class Tarjeta {
 
     public int Saldo { get; set; }
-
+    public int Id { get; set; }
     public int TarjetaTipoId { get; set; }
     public TarjetaTipo Tipo { get; set; }
 
