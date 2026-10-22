@@ -54,7 +54,25 @@ public class Tarjeta {
     }
 
     public bool puedeViajar (DateTime fecha){
+        if (esFranquicia() && !estaEnFranjaHoraria(fecha)){
+            return false;
+        }
         if (fecha < UltimoViaje.AddMinutes(Tipo.MinutosEntreViajes)){
+            return false;
+        }
+        return true;
+    }
+
+    public bool esFranquicia (){
+        // el tipo 1 es Normal, todos los demas son franquicias
+        return Tipo.Id != 1;
+    }
+
+    public bool estaEnFranjaHoraria (DateTime fecha){
+        if (fecha.DayOfWeek == DayOfWeek.Saturday || fecha.DayOfWeek == DayOfWeek.Sunday){
+            return false;
+        }
+        if (fecha.Hour < 6 || fecha.Hour >= 22){
             return false;
         }
         return true;

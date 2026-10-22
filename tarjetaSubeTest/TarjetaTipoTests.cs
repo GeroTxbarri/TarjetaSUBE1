@@ -52,10 +52,11 @@ public class TarjetaTipoTests
         var tarjeta = new Tarjeta(tipo);
 
         var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
 
         for (int i = 0; i < 10; i++)
         {
-            var boleto = colectivo.pagarCon(tarjeta);
+            var boleto = colectivo.pagarCon(tarjeta, hora.AddMinutes(i * 10));
 
             Assert.That(boleto.TotalAbonado, Is.EqualTo(0));
             Assert.That(tarjeta.Saldo, Is.EqualTo(0));
@@ -70,7 +71,8 @@ public class TarjetaTipoTests
         tarjeta.cargarTarjeta(2000);
 
         var colectivo = new Colectivo { Linea_numero = 67 };
-        var boleto = colectivo.pagarCon(tarjeta);
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+        var boleto = colectivo.pagarCon(tarjeta, hora);
 
         Assert.That(boleto.TotalAbonado, Is.EqualTo(0));
         Assert.That(tarjeta.Saldo, Is.EqualTo(2000));
@@ -204,5 +206,112 @@ public class TarjetaTipoTests
         var boletoOtroDia = colectivo.pagarCon(tarjeta, hora.AddDays(1));
 
         Assert.That(boletoOtroDia.TotalAbonado, Is.EqualTo(0));
+    }
+
+    [Test]
+    [TestCase(2, "Medio boleto estudiantil", 50)]
+    [TestCase(3, "Boleto gratuito estudiantil", 100)]
+    [TestCase(4, "Franquicia completa", 100)]
+    public void Franquicia_NoPuedeViajarElSabado(int id, string nombre, int porcentaje)
+    {
+        var tarjeta = new Tarjeta(new TarjetaTipo(id, nombre, porcentaje));
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var sabado = new DateTime(2026, 10, 24, 10, 0, 0);
+
+        var resultado = colectivo.pagarCon(tarjeta, sabado);
+
+        Assert.That(resultado, Is.EqualTo(false));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000));
+    }
+
+    [Test]
+    [TestCase(2, "Medio boleto estudiantil", 50)]
+    [TestCase(3, "Boleto gratuito estudiantil", 100)]
+    [TestCase(4, "Franquicia completa", 100)]
+    public void Franquicia_NoPuedeViajarElDomingo(int id, string nombre, int porcentaje)
+    {
+        var tarjeta = new Tarjeta(new TarjetaTipo(id, nombre, porcentaje));
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var domingo = new DateTime(2026, 10, 25, 10, 0, 0);
+
+        var resultado = colectivo.pagarCon(tarjeta, domingo);
+
+        Assert.That(resultado, Is.EqualTo(false));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000));
+    }
+
+    [Test]
+    [TestCase(2, "Medio boleto estudiantil", 50)]
+    [TestCase(3, "Boleto gratuito estudiantil", 100)]
+    [TestCase(4, "Franquicia completa", 100)]
+    public void Franquicia_NoPuedeViajarAntesDeLas6(int id, string nombre, int porcentaje)
+    {
+        var tarjeta = new Tarjeta(new TarjetaTipo(id, nombre, porcentaje));
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var lunesTemprano = new DateTime(2026, 10, 26, 5, 59, 0);
+
+        var resultado = colectivo.pagarCon(tarjeta, lunesTemprano);
+
+        Assert.That(resultado, Is.EqualTo(false));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000));
+    }
+
+    [Test]
+    [TestCase(2, "Medio boleto estudiantil", 50)]
+    [TestCase(3, "Boleto gratuito estudiantil", 100)]
+    [TestCase(4, "Franquicia completa", 100)]
+    public void Franquicia_NoPuedeViajarDesdeLas22(int id, string nombre, int porcentaje)
+    {
+        var tarjeta = new Tarjeta(new TarjetaTipo(id, nombre, porcentaje));
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var lunesNoche = new DateTime(2026, 10, 26, 22, 0, 0);
+
+        var resultado = colectivo.pagarCon(tarjeta, lunesNoche);
+
+        Assert.That(resultado, Is.EqualTo(false));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000));
+    }
+
+    [Test]
+    [TestCase(2, "Medio boleto estudiantil", 50)]
+    [TestCase(3, "Boleto gratuito estudiantil", 100)]
+    [TestCase(4, "Franquicia completa", 100)]
+    public void Franquicia_PuedeViajarDentroDeLaFranja(int id, string nombre, int porcentaje)
+    {
+        var tarjeta = new Tarjeta(new TarjetaTipo(id, nombre, porcentaje));
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var lunes6 = new DateTime(2026, 10, 26, 6, 0, 0);
+        var viernes2159 = new DateTime(2026, 10, 30, 21, 59, 0);
+
+        var boleto1 = colectivo.pagarCon(tarjeta, lunes6);
+        var boleto2 = colectivo.pagarCon(tarjeta, viernes2159);
+
+        Assert.That(boleto1, Is.Not.EqualTo(false));
+        Assert.That(boleto2, Is.Not.EqualTo(false));
+    }
+
+    [Test]
+    public void Normal_PuedeViajarFueraDeLaFranja()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var domingoNoche = new DateTime(2026, 10, 25, 23, 0, 0);
+
+        var boleto = colectivo.pagarCon(tarjeta, domingoNoche);
+
+        Assert.That(boleto.TotalAbonado, Is.EqualTo(1580));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 1580));
     }
 }
