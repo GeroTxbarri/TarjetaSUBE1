@@ -66,6 +66,29 @@ public class TarjetaTests
 
     }
 
+    [Test]
+    public void cargaExcedentePendiente(){
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(30000);
+        tarjeta.cargarTarjeta(30000);
+        Assert.That(tarjeta.Saldo, Is.EqualTo(56000));
+        Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(4000));
+
+    }
+
+    [Test]
+    public void cargaExcedenteAcredita(){
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(30000);
+        tarjeta.cargarTarjeta(30000);
+        tarjeta.descontarSaldo(1580);
+        Assert.That(tarjeta.Saldo, Is.EqualTo(56000));
+        Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(4000-1580));
+
+    }
+
+
+
 
 
 }
