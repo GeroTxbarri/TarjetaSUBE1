@@ -5,6 +5,9 @@ public class Tarjeta {
     public int TarjetaTipoId { get; set; }
     public TarjetaTipo Tipo { get; set; }
 
+    public const int LimiteSaldo = 56000;
+    public int SaldoPendiente { get; set; } = 0;
+
     int[] montoValidos = {2000,3000,4000,5000,8000,10000,15000,20000,25000,30000};
 
     public Tarjeta (){
@@ -19,14 +22,18 @@ public class Tarjeta {
 
     public void cargarTarjeta (int monto){
         
-        if (montoValidos.Contains(monto) && Saldo+monto <=40000 ){
-            Saldo += monto;
+    
+        if (montoValidos.Contains(monto) ){
+            SaldoPendiente += monto;
+            AcreditarCarga();
         }
+        
         
     }
     public bool descontarSaldo (int monto){
         if ((Saldo - monto) >= -2000){
             Saldo -= monto;
+            AcreditarCarga();
             return true;
         }
 
@@ -38,6 +45,17 @@ public class Tarjeta {
     public int calcularPrecio (int tarifa){
         int descuento = tarifa * Tipo.PorcentajeDescuento / 100;
         return tarifa - descuento;
+    }
+
+    public void AcreditarCarga (){
+        if (SaldoPendiente > 0  && Saldo <= LimiteSaldo){
+
+            int saldolibre = LimiteSaldo-Saldo;
+            int saldoacreditar = Math.Min(saldolibre, SaldoPendiente);
+            Saldo += saldoacreditar;
+            SaldoPendiente -= saldoacreditar;
+
+        }
     }
 
     
