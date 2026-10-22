@@ -10,6 +10,7 @@ public class Tarjeta {
 
     public DateTime UltimoViaje { get; set; } = DateTime.MinValue;
     public int ViajesHoy { get; set; } = 0;
+    public int ViajesMes { get; set; } = 0;
 
     int[] montoValidos = {2000,3000,4000,5000,8000,10000,15000,20000,25000,30000};
 
@@ -46,6 +47,16 @@ public class Tarjeta {
     }
 
     public int calcularPrecio (int tarifa, DateTime fecha){
+        if (!esFranquicia()){
+            int numeroDeViaje = viajesDelMes(fecha) + 1;
+            if (numeroDeViaje >= 80){
+                return tarifa - tarifa * 25 / 100;
+            }
+            if (numeroDeViaje >= 30){
+                return tarifa - tarifa * 20 / 100;
+            }
+            return tarifa;
+        }
         if (Tipo.ViajesConDescuentoPorDia > 0 && viajesDelDia(fecha) >= Tipo.ViajesConDescuentoPorDia){
             return tarifa;
         }
@@ -85,8 +96,16 @@ public class Tarjeta {
         return 0;
     }
 
+    public int viajesDelMes (DateTime fecha){
+        if (fecha.Year == UltimoViaje.Year && fecha.Month == UltimoViaje.Month){
+            return ViajesMes;
+        }
+        return 0;
+    }
+
     public void registrarViaje (DateTime fecha){
         ViajesHoy = viajesDelDia(fecha) + 1;
+        ViajesMes = viajesDelMes(fecha) + 1;
         UltimoViaje = fecha;
     }
 
