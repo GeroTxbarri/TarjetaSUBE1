@@ -30,20 +30,19 @@ public class TarjetaTipoTests
     [Test]
     public void MedioBoleto_PagaLaMitad()
     {
-        var tipo = new TarjetaTipo(2, "Medio boleto estudiantil", 50);
+        var tipo = new TarjetaTipo(2, "Medio boleto estudiantil", 50) { ViajesConDescuentoPorDia = 2, MinutosEntreViajes = 5 };
         var tarjeta = new Tarjeta(tipo);
         tarjeta.cargarTarjeta(5000);
 
         var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
 
-        var boleto1 = colectivo.pagarCon(tarjeta);
-        var boleto2 = colectivo.pagarCon(tarjeta);
-        var boleto3 = colectivo.pagarCon(tarjeta);
+        var boleto1 = colectivo.pagarCon(tarjeta, hora);
+        var boleto2 = colectivo.pagarCon(tarjeta, hora.AddMinutes(10));
 
         Assert.That(boleto1.TotalAbonado, Is.EqualTo(1580 / 2));
         Assert.That(boleto2.TotalAbonado, Is.EqualTo(1580 / 2));
-        Assert.That(boleto3.TotalAbonado, Is.EqualTo(1580 / 2));
-        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 790 * 3));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 790 * 2));
     }
 
     [Test]
