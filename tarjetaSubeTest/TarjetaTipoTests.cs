@@ -149,4 +149,61 @@ public class TarjetaTipoTests
 
         Assert.That(boletoOtroDia.TotalAbonado, Is.EqualTo(790));
     }
+
+    [Test]
+    public void BoletoGratuito_MaximoDosViajesGratisPorDia()
+    {
+        var tipo = new TarjetaTipo(3, "Boleto gratuito estudiantil", 100) { ViajesConDescuentoPorDia = 2 };
+        var tarjeta = new Tarjeta(tipo);
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+
+        var boleto1 = colectivo.pagarCon(tarjeta, hora);
+        var boleto2 = colectivo.pagarCon(tarjeta, hora.AddMinutes(10));
+        var boleto3 = colectivo.pagarCon(tarjeta, hora.AddMinutes(20));
+
+        Assert.That(boleto1.TotalAbonado, Is.EqualTo(0));
+        Assert.That(boleto2.TotalAbonado, Is.EqualTo(0));
+        Assert.That(boleto3.TotalAbonado, Is.Not.EqualTo(0));
+    }
+
+    [Test]
+    public void BoletoGratuito_ViajesDespuesDelSegundoPaganCompleto()
+    {
+        var tipo = new TarjetaTipo(3, "Boleto gratuito estudiantil", 100) { ViajesConDescuentoPorDia = 2 };
+        var tarjeta = new Tarjeta(tipo);
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+
+        colectivo.pagarCon(tarjeta, hora);
+        colectivo.pagarCon(tarjeta, hora.AddMinutes(10));
+        var boleto3 = colectivo.pagarCon(tarjeta, hora.AddMinutes(20));
+        var boleto4 = colectivo.pagarCon(tarjeta, hora.AddMinutes(30));
+
+        Assert.That(boleto3.TotalAbonado, Is.EqualTo(1580));
+        Assert.That(boleto4.TotalAbonado, Is.EqualTo(1580));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 1580 * 2));
+    }
+
+    [Test]
+    public void BoletoGratuito_AlOtroDiaVuelveASerGratis()
+    {
+        var tipo = new TarjetaTipo(3, "Boleto gratuito estudiantil", 100) { ViajesConDescuentoPorDia = 2 };
+        var tarjeta = new Tarjeta(tipo);
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+
+        colectivo.pagarCon(tarjeta, hora);
+        colectivo.pagarCon(tarjeta, hora.AddMinutes(10));
+        colectivo.pagarCon(tarjeta, hora.AddMinutes(20));
+        var boletoOtroDia = colectivo.pagarCon(tarjeta, hora.AddDays(1));
+
+        Assert.That(boletoOtroDia.TotalAbonado, Is.EqualTo(0));
+    }
 }
