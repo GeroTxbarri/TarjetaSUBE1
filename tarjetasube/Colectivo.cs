@@ -6,11 +6,21 @@ public class Colectivo
 
     public dynamic pagarCon(Tarjeta tarjeta)
     {
-        int precio = tarjeta.calcularPrecio(Tarifa);
+        return pagarCon(tarjeta, DateTime.Now);
+    }
+
+    public dynamic pagarCon(Tarjeta tarjeta, DateTime fecha)
+    {
+        if (!tarjeta.puedeViajar(fecha))
+        {
+            return false;
+        }
+        int precio = tarjeta.calcularPrecio(Tarifa, fecha);
         if (!tarjeta.descontarSaldo(precio))
         {
             return false;
         }
-        return new Boleto(precio, Linea_numero, tarjeta);
+        tarjeta.registrarViaje(fecha);
+        return new Boleto(precio, Linea_numero, tarjeta, fecha);
     }
 }

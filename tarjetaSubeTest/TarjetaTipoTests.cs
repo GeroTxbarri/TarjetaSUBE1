@@ -76,4 +76,77 @@ public class TarjetaTipoTests
         Assert.That(boleto.TotalAbonado, Is.EqualTo(0));
         Assert.That(tarjeta.Saldo, Is.EqualTo(2000));
     }
+
+    [Test]
+    public void MedioBoleto_NoPuedeViajarAntesDe5Minutos()
+    {
+        var tipo = new TarjetaTipo(2, "Medio boleto estudiantil", 50) { ViajesConDescuentoPorDia = 2, MinutosEntreViajes = 5 };
+        var tarjeta = new Tarjeta(tipo);
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+
+        var boleto = colectivo.pagarCon(tarjeta, hora);
+        var segundoViaje = colectivo.pagarCon(tarjeta, hora.AddMinutes(3));
+
+        Assert.That(boleto.TotalAbonado, Is.EqualTo(790));
+        Assert.That(segundoViaje, Is.EqualTo(false));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 790));
+    }
+
+    [Test]
+    public void MedioBoleto_PuedeViajarDespuesDe5Minutos()
+    {
+        var tipo = new TarjetaTipo(2, "Medio boleto estudiantil", 50) { ViajesConDescuentoPorDia = 2, MinutosEntreViajes = 5 };
+        var tarjeta = new Tarjeta(tipo);
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+
+        colectivo.pagarCon(tarjeta, hora);
+        var segundoViaje = colectivo.pagarCon(tarjeta, hora.AddMinutes(5));
+
+        Assert.That(segundoViaje.TotalAbonado, Is.EqualTo(790));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 790 * 2));
+    }
+
+    [Test]
+    public void MedioBoleto_MaximoDosViajesPorDia()
+    {
+        var tipo = new TarjetaTipo(2, "Medio boleto estudiantil", 50) { ViajesConDescuentoPorDia = 2, MinutosEntreViajes = 5 };
+        var tarjeta = new Tarjeta(tipo);
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+
+        var boleto1 = colectivo.pagarCon(tarjeta, hora);
+        var boleto2 = colectivo.pagarCon(tarjeta, hora.AddMinutes(10));
+        var boleto3 = colectivo.pagarCon(tarjeta, hora.AddMinutes(20));
+
+        Assert.That(boleto1.TotalAbonado, Is.EqualTo(790));
+        Assert.That(boleto2.TotalAbonado, Is.EqualTo(790));
+        Assert.That(boleto3.TotalAbonado, Is.EqualTo(1580));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 790 * 2 - 1580));
+    }
+
+    [Test]
+    public void MedioBoleto_AlOtroDiaVuelveAPagarLaMitad()
+    {
+        var tipo = new TarjetaTipo(2, "Medio boleto estudiantil", 50) { ViajesConDescuentoPorDia = 2, MinutosEntreViajes = 5 };
+        var tarjeta = new Tarjeta(tipo);
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+
+        colectivo.pagarCon(tarjeta, hora);
+        colectivo.pagarCon(tarjeta, hora.AddMinutes(10));
+        colectivo.pagarCon(tarjeta, hora.AddMinutes(20));
+        var boletoOtroDia = colectivo.pagarCon(tarjeta, hora.AddDays(1));
+
+        Assert.That(boletoOtroDia.TotalAbonado, Is.EqualTo(790));
+    }
 }

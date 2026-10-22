@@ -8,9 +8,9 @@ public class Boleto
     public int SaldoRestante { get; set; }
     public int IdTarjeta { get; set; }
 
-    public Boleto(int totalAbonado, int lineaColectivo, Tarjeta tarjeta)
+    public Boleto(int totalAbonado, int lineaColectivo, Tarjeta tarjeta, DateTime fecha)
     {
-        Fecha = DateTime.Now;
+        Fecha = fecha;
         TarjetaTipo = tarjeta.Tipo.Nombre;
         TotalAbonado = totalAbonado;
         LineaColectivo = lineaColectivo;
