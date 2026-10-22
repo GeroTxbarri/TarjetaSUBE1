@@ -98,7 +98,7 @@ public class TarjetaTests
 
         for (int viaje = 1; viaje <= 29; viaje++){
             var boleto = colectivo.pagarCon(tarjeta, hora.AddMinutes(viaje));
-            Assert.That(boleto.TotalAbonado, Is.EqualTo(1580));
+            Assert.That(boleto.TotalAbonado, Is.EqualTo(2150));
         }
     }
 
@@ -116,7 +116,7 @@ public class TarjetaTests
         }
         for (int viaje = 30; viaje <= 79; viaje++){
             var boleto = colectivo.pagarCon(tarjeta, hora.AddMinutes(viaje));
-            Assert.That(boleto.TotalAbonado, Is.EqualTo(1580 - 1580 * 20 / 100));
+            Assert.That(boleto.TotalAbonado, Is.EqualTo(2150 - 2150 * 20 / 100));
         }
     }
 
@@ -135,8 +135,8 @@ public class TarjetaTests
         var boleto80 = colectivo.pagarCon(tarjeta, hora.AddMinutes(80));
         var boleto81 = colectivo.pagarCon(tarjeta, hora.AddMinutes(81));
 
-        Assert.That(boleto80.TotalAbonado, Is.EqualTo(1580 - 1580 * 25 / 100));
-        Assert.That(boleto81.TotalAbonado, Is.EqualTo(1580 - 1580 * 25 / 100));
+        Assert.That(boleto80.TotalAbonado, Is.EqualTo(2150 - 2150 * 25 / 100));
+        Assert.That(boleto81.TotalAbonado, Is.EqualTo(2150 - 2150 * 25 / 100));
     }
 
     [Test]
@@ -153,7 +153,7 @@ public class TarjetaTests
         }
         var boletoOtroMes = colectivo.pagarCon(tarjeta, new DateTime(2026, 11, 2, 10, 0, 0));
 
-        Assert.That(boletoOtroMes.TotalAbonado, Is.EqualTo(1580));
+        Assert.That(boletoOtroMes.TotalAbonado, Is.EqualTo(2150));
     }
 
     [Test]
@@ -171,6 +171,6 @@ public class TarjetaTests
         }
         var boleto30 = colectivo.pagarCon(tarjeta, hora.AddMinutes(300));
 
-        Assert.That(boleto30.TotalAbonado, Is.EqualTo(1580));
+        Assert.That(boleto30.TotalAbonado, Is.EqualTo(2150));
     }
 }
