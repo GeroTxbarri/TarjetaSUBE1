@@ -1,5 +1,5 @@
 public class ColectivoInterUrbano : Colectivo {
-    public ColectivoInterUrbano {
+    public ColectivoInterUrbano() {
         Tarifa = 3000;
     }
 }
