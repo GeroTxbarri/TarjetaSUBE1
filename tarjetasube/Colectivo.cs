@@ -1,6 +1,6 @@
 public class Colectivo
 {
-    private int Tarifa = 1580;
+    private int Tarifa = 2150;
 
     public int Linea_numero { get; set; }
 

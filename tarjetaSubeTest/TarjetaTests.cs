@@ -37,8 +37,8 @@ public class TarjetaTests
     public void descontarSaldo_valido(){
         var tarjeta = new Tarjeta();
         tarjeta.cargarTarjeta(2000);
-        tarjeta.descontarSaldo(1580);
-        Assert.That(tarjeta.Saldo, Is.EqualTo(420));
+        tarjeta.descontarSaldo(2150);
+        Assert.That(tarjeta.Saldo, Is.EqualTo(-150));
         
     }
 
@@ -46,9 +46,9 @@ public class TarjetaTests
     public void descontarSaldo_novalido() {
         var tarjeta = new Tarjeta();
         tarjeta.cargarTarjeta(2000);
-        tarjeta.descontarSaldo(1580);
-        tarjeta.descontarSaldo(1580);
-        tarjeta.descontarSaldo(1580);
+        tarjeta.descontarSaldo(2150);
+        tarjeta.descontarSaldo(2150);
+        tarjeta.descontarSaldo(2150);
 
         Assert.That(tarjeta.Saldo, Is.GreaterThanOrEqualTo(-2000));
 
@@ -58,11 +58,10 @@ public class TarjetaTests
     public void descontarSaldo_viajeplus() {
         var tarjeta = new Tarjeta();
         tarjeta.cargarTarjeta(2000);
-        tarjeta.descontarSaldo(1580);
-        tarjeta.descontarSaldo(1580);
+        tarjeta.descontarSaldo(2150);
         tarjeta.cargarTarjeta(2000);
 
-        Assert.That(tarjeta.Saldo, Is.EqualTo(840));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(1850));
 
     }
 
@@ -81,9 +80,9 @@ public class TarjetaTests
         var tarjeta = new Tarjeta();
         tarjeta.cargarTarjeta(30000);
         tarjeta.cargarTarjeta(30000);
-        tarjeta.descontarSaldo(1580);
+        tarjeta.descontarSaldo(2150);
         Assert.That(tarjeta.Saldo, Is.EqualTo(56000));
-        Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(4000-1580));
+        Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(4000-2150));
 
     }
 
