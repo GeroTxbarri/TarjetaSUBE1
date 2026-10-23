@@ -12,7 +12,7 @@ public class ColectivoTests
         var colectivo = new Colectivo { Linea_numero = 67 };
         var boleto = colectivo.pagarCon(tarjeta);
 
-        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 1580));
-        Assert.That(boleto.TotalAbonado, Is.EqualTo(1580));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 2150));
+        Assert.That(boleto.TotalAbonado, Is.EqualTo(2150));
     }
 }
