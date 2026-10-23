@@ -15,12 +15,20 @@ public class Colectivo
         {
             return false;
         }
-        int precio = tarjeta.calcularPrecio(Tarifa, fecha);
+
+        bool transbordo = tarjeta.esTrasbordo(Linea_numero, fecha);
+        
+        int precio = 0
+        if (!transbordo){
+            precio = tarjeta.calcularPrecio(Tarifa, fecha);
+        }
+
         if (!tarjeta.descontarSaldo(precio))
         {
             return false;
         }
-        tarjeta.registrarViaje(fecha);
-        return new Boleto(precio, Linea_numero, tarjeta, fecha);
+
+        tarjeta.registrarViaje(fecha, Linea_numero, transbordo);
+        return new Boleto(precio, Linea_numero, tarjeta, fecha, transbordo);
     }
 }
