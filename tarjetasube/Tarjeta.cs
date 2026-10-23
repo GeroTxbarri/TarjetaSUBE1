@@ -12,6 +12,9 @@ public class Tarjeta {
     public int ViajesHoy { get; set; } = 0;
     public int ViajesMes { get; set; } = 0;
 
+    public int UltimaLinea { get; set; } = -1;
+    public DateTime? InicioVentanaTrasbordo { get; set; } = null;
+
     int[] montoValidos = {2000,3000,4000,5000,8000,10000,15000,20000,25000,30000};
 
     public Tarjeta (){
@@ -103,10 +106,16 @@ public class Tarjeta {
         return 0;
     }
 
-    public void registrarViaje (DateTime fecha){
-        ViajesHoy = viajesDelDia(fecha) + 1;
-        ViajesMes = viajesDelMes(fecha) + 1;
+    public void registrarViaje (DateTime fecha, int linea = -1, bool esTrasbordo = false){
         UltimoViaje = fecha;
+        UltimaLinea = linea;
+
+        if (!esTrasbordo)
+        {
+            InicioVentanaTrasbordo = fecha;
+            ViajesHoy = viajesDelDia(fecha) + 1;
+            ViajesMes = viajesDelMes(fecha) + 1;
+        }
     }
 
     public void AcreditarCarga (){
@@ -119,6 +128,26 @@ public class Tarjeta {
 
         }
     }
+
+    public bool esTrasbordo(int linea, DateTime fecha) {
+        if (InicioVentanaTrasbordo == null || UltimaLinea == -1) 
+            return false;
+        if (linea == UltimaLinea) 
+            return false;
+        if (!estaEnHorarioTrasbordo(fecha)) 
+            return false;
+        if (fecha > InicioVentanaTrasbordo.Value.AddHours(1) || fecha < InicioVentanaTrasbordo.Value) return false;
+            return true;
+}
+
+public bool estaEnHorarioTrasbordo(DateTime fecha) {
+    if (fecha.DayOfWeek == DayOfWeek.Sunday) 
+        return false;
+    if (fecha.Hour < 7 || fecha.Hour >= 22) 
+        return false;
+    return true;
+}
+
 
     
 }
