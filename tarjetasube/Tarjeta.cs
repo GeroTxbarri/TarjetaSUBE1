@@ -10,6 +10,7 @@ public class Tarjeta {
 
     public DateTime UltimoViaje { get; set; } = DateTime.MinValue;
     public int ViajesHoy { get; set; } = 0;
+    public int ViajesMes { get; set; } = 0;
 
     int[] montoValidos = {2000,3000,4000,5000,8000,10000,15000,20000,25000,30000};
 
@@ -46,6 +47,16 @@ public class Tarjeta {
     }
 
     public int calcularPrecio (int tarifa, DateTime fecha){
+        if (!esFranquicia()){
+            int numeroDeViaje = viajesDelMes(fecha) + 1;
+            if (numeroDeViaje >= 80){
+                return tarifa - tarifa * 25 / 100;
+            }
+            if (numeroDeViaje >= 30){
+                return tarifa - tarifa * 20 / 100;
+            }
+            return tarifa;
+        }
         if (Tipo.ViajesConDescuentoPorDia > 0 && viajesDelDia(fecha) >= Tipo.ViajesConDescuentoPorDia){
             return tarifa;
         }
@@ -54,7 +65,25 @@ public class Tarjeta {
     }
 
     public bool puedeViajar (DateTime fecha){
+        if (esFranquicia() && !estaEnFranjaHoraria(fecha)){
+            return false;
+        }
         if (fecha < UltimoViaje.AddMinutes(Tipo.MinutosEntreViajes)){
+            return false;
+        }
+        return true;
+    }
+
+    public bool esFranquicia (){
+        // el tipo 1 es Normal, todos los demas son franquicias
+        return Tipo.Id != 1;
+    }
+
+    public bool estaEnFranjaHoraria (DateTime fecha){
+        if (fecha.DayOfWeek == DayOfWeek.Saturday || fecha.DayOfWeek == DayOfWeek.Sunday){
+            return false;
+        }
+        if (fecha.Hour < 6 || fecha.Hour >= 22){
             return false;
         }
         return true;
@@ -67,8 +96,16 @@ public class Tarjeta {
         return 0;
     }
 
+    public int viajesDelMes (DateTime fecha){
+        if (fecha.Year == UltimoViaje.Year && fecha.Month == UltimoViaje.Month){
+            return ViajesMes;
+        }
+        return 0;
+    }
+
     public void registrarViaje (DateTime fecha){
         ViajesHoy = viajesDelDia(fecha) + 1;
+        ViajesMes = viajesDelMes(fecha) + 1;
         UltimoViaje = fecha;
     }
 

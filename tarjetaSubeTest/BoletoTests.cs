@@ -28,14 +28,15 @@ public class BoletoTests
         tarjeta.cargarTarjeta(5000);
 
         var colectivo = new Colectivo { Linea_numero = 2 };
-        var boleto = colectivo.pagarCon(tarjeta);
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+        var boleto = colectivo.pagarCon(tarjeta, hora);
 
         Assert.That(boleto.TotalAbonado, Is.EqualTo(790));
         Assert.That(boleto.LineaColectivo, Is.EqualTo(2));
         Assert.That(boleto.TarjetaTipo, Is.EqualTo("Medio boleto estudiantil"));
         Assert.That(boleto.IdTarjeta, Is.EqualTo(2));
         Assert.That(boleto.SaldoRestante, Is.EqualTo(5000 - 790));
-        Assert.That(boleto.Fecha.Date, Is.EqualTo(DateTime.Today));
+        Assert.That(boleto.Fecha.Date, Is.EqualTo(hora.Date));
     }
 
     [Test]
@@ -46,14 +47,15 @@ public class BoletoTests
         tarjeta.cargarTarjeta(5000);
 
         var colectivo = new Colectivo { Linea_numero = 3 };
-        var boleto = colectivo.pagarCon(tarjeta);
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+        var boleto = colectivo.pagarCon(tarjeta, hora);
 
         Assert.That(boleto.TotalAbonado, Is.EqualTo(0));
         Assert.That(boleto.LineaColectivo, Is.EqualTo(3));
         Assert.That(boleto.TarjetaTipo, Is.EqualTo("Boleto gratuito estudiantil"));
         Assert.That(boleto.IdTarjeta, Is.EqualTo(3));
         Assert.That(boleto.SaldoRestante, Is.EqualTo(5000));
-        Assert.That(boleto.Fecha.Date, Is.EqualTo(DateTime.Today));
+        Assert.That(boleto.Fecha.Date, Is.EqualTo(hora.Date));
     }
 
     [Test]
@@ -64,14 +66,15 @@ public class BoletoTests
         tarjeta.cargarTarjeta(5000);
 
         var colectivo = new Colectivo { Linea_numero = 4 };
-        var boleto = colectivo.pagarCon(tarjeta);
+        var hora = new DateTime(2026, 10, 22, 10, 0, 0);
+        var boleto = colectivo.pagarCon(tarjeta, hora);
 
         Assert.That(boleto.TotalAbonado, Is.EqualTo(0));
         Assert.That(boleto.LineaColectivo, Is.EqualTo(4));
         Assert.That(boleto.TarjetaTipo, Is.EqualTo("Franquicia completa"));
         Assert.That(boleto.IdTarjeta, Is.EqualTo(4));
         Assert.That(boleto.SaldoRestante, Is.EqualTo(5000));
-        Assert.That(boleto.Fecha.Date, Is.EqualTo(DateTime.Today));
+        Assert.That(boleto.Fecha.Date, Is.EqualTo(hora.Date));
     }
 
     [Test]
