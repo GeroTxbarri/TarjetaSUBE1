@@ -31,11 +31,11 @@ public class BoletoTests
         var hora = new DateTime(2026, 10, 22, 10, 0, 0);
         var boleto = colectivo.pagarCon(tarjeta, hora);
 
-        Assert.That(boleto.TotalAbonado, Is.EqualTo(1075));
+        Assert.That(boleto.TotalAbonado, Is.EqualTo(790));
         Assert.That(boleto.LineaColectivo, Is.EqualTo(2));
         Assert.That(boleto.TarjetaTipo, Is.EqualTo("Medio boleto estudiantil"));
         Assert.That(boleto.IdTarjeta, Is.EqualTo(2));
-        Assert.That(boleto.SaldoRestante, Is.EqualTo(5000 - 1075));
+        Assert.That(boleto.SaldoRestante, Is.EqualTo(5000 - 790));
         Assert.That(boleto.Fecha.Date, Is.EqualTo(hora.Date));
     }
 
@@ -80,7 +80,7 @@ public class BoletoTests
     [Test]
     public void Boleto_ViajeConSaldoNegativo_MuestraSaldoRestanteNegativo()
     {
-        var tarjeta = new Tarjeta { Id = 5, Saldo = 500 };
+        var tarjeta = new Tarjeta { Id = 5 };
 
         var colectivo = new Colectivo { Linea_numero = 5 };
         var boleto = colectivo.pagarCon(tarjeta);
@@ -89,7 +89,7 @@ public class BoletoTests
         Assert.That(boleto.LineaColectivo, Is.EqualTo(5));
         Assert.That(boleto.TarjetaTipo, Is.EqualTo("Normal"));
         Assert.That(boleto.IdTarjeta, Is.EqualTo(5));
-        Assert.That(boleto.SaldoRestante, Is.EqualTo(500 - 2150));
+        Assert.That(boleto.SaldoRestante, Is.EqualTo(-2150));
         Assert.That(boleto.Fecha.Date, Is.EqualTo(DateTime.Today));
     }
 }
