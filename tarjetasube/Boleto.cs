@@ -5,7 +5,7 @@ public class Boleto
     public int TotalAbonado { get; set; }
     public int Tarifa => TotalAbonado;
     public int LineaColectivo { get; set; }
-    public int SaldoRestante { get; set; }
+    public decimal SaldoRestante { get; set; }
     public int IdTarjeta { get; set; }
     public bool EsTrasbordo {get; set;} = false;
 
