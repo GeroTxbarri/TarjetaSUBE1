@@ -1,4 +1,4 @@
-// Simulación básica del sistema de Tarjeta SUBE 
+// Simulación básica del sistema de Tarjeta SUBE
 
 var tarjeta = new Tarjeta();
 
@@ -14,19 +14,29 @@ Console.WriteLine("\nIntentando cargar $1234 (monto inválido)...");
 tarjeta.cargarTarjeta(1234);
 Console.WriteLine($"Saldo (sin cambios): ${tarjeta.Saldo}");
 
-// Viajar en colectivo
+// Viajar en colectivo (fecha explícita para no depender del horario real)
 var colectivo = new Colectivo { Linea_numero = 67 };
 Console.WriteLine($"\nViajando en colectivo línea {colectivo.Linea_numero}...");
-var boleto = colectivo.pagarCon(tarjeta);
-Console.WriteLine($"Boleto emitido — Total abonado: ${boleto.TotalAbonado} | Línea: {boleto.LineaColectivo}");
-Console.WriteLine($"Saldo restante: ${tarjeta.Saldo}");
+var fecha = new DateTime(2026, 10, 22, 10, 0, 0);
+var resultado = colectivo.pagarCon(tarjeta, fecha);
+if (resultado is Boleto boleto)
+{
+    Console.WriteLine($"Boleto emitido — Total abonado: ${boleto.TotalAbonado} | Línea: {boleto.LineaColectivo}");
+    Console.WriteLine($"Saldo restante: ${tarjeta.Saldo}");
+}
 
 // Intento de viaje sin saldo suficiente
 Console.WriteLine("\nVaciando tarjeta y probando viajar sin saldo...");
-tarjeta.descontarSaldo(tarjeta.Saldo); // vaciamos
+tarjeta.Saldo = 0;
 Console.WriteLine($"Saldo actual: ${tarjeta.Saldo}");
-var boletoDenegado = colectivo.pagarCon(tarjeta);
-Console.WriteLine($"Saldo después del intento: ${tarjeta.Saldo} (no descontó)");
-Console.WriteLine($"Total abonado del boleto: ${boletoDenegado.TotalAbonado} (boleto generado igual — ver nota)");
+var resultadoDenegado = colectivo.pagarCon(tarjeta, fecha.AddMinutes(5));
+if (resultadoDenegado is bool denegado && !denegado)
+{
+    Console.WriteLine("Pago denegado: saldo insuficiente.");
+}
+else
+{
+    Console.WriteLine($"Boleto emitido — Total abonado: ${((Boleto)resultadoDenegado).TotalAbonado}");
+}
 
 Console.WriteLine("\n=== Fin de la simulación ===");

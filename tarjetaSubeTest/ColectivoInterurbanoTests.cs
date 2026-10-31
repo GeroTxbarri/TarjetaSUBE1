@@ -3,7 +3,6 @@ using NUnit.Framework;
 [TestFixture]
 public class ColectivoInterurbanoTests
 {
-    
     [Test]
     public void PagarNormal()
     {
@@ -11,14 +10,14 @@ public class ColectivoInterurbanoTests
         tarjeta.cargarTarjeta(5000);
 
         var colectivo = new ColectivoInterUrbano { Linea_numero = 101 };
-        var boleto = colectivo.pagarCon(tarjeta);
+        var fecha = new DateTime(2026, 10, 22, 10, 0, 0); // Jueves 10:00
+        var boleto = colectivo.pagarCon(tarjeta, fecha);
 
         Assert.That(boleto.TotalAbonado, Is.EqualTo(3000));
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 3000));
         Assert.That(boleto.LineaColectivo, Is.EqualTo(101));
     }
 
-    
     [Test]
     public void PagarConMedioBoleto()
     {
@@ -35,7 +34,6 @@ public class ColectivoInterurbanoTests
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 1500));
     }
 
-    
     [Test]
     public void PagarConFranquiciaCompleta()
     {
@@ -53,19 +51,34 @@ public class ColectivoInterurbanoTests
     }
 
     [Test]
-    public void PagarConSaldoInsuficiente()
+    public void PagarConSaldoInsuficiente_PeroEnMargenNegativo_DevuelveBoleto()
     {
+        // Saldo $2000, tarifa $3000 → diferencia -$1000, dentro del margen de -$2000 permitido
         var tarjeta = new Tarjeta();
         tarjeta.cargarTarjeta(2000);
 
         var colectivo = new ColectivoInterUrbano { Linea_numero = 101 };
-        var boleto = colectivo.pagarCon(tarjeta);
+        var fecha = new DateTime(2026, 10, 22, 10, 0, 0);
+        var boleto = colectivo.pagarCon(tarjeta, fecha);
 
         Assert.That(boleto.TotalAbonado, Is.EqualTo(3000));
-        Assert.That(tarjeta.Saldo, Is.EqualTo(2000 - 3000)); // -1000
+        Assert.That(tarjeta.Saldo, Is.EqualTo(2000 - 3000)); // -1000, dentro del margen
     }
 
-    
+    [Test]
+    public void PagarConSaldoInsuficiente_FueraDelMargenNegativo_DevuelveFalse()
+    {
+        // Saldo $0, tarifa $3000 → superaría el -$2000 permitido → se rechaza
+        var tarjeta = new Tarjeta();
+
+        var colectivo = new ColectivoInterUrbano { Linea_numero = 101 };
+        var fecha = new DateTime(2026, 10, 22, 10, 0, 0);
+        var resultado = colectivo.pagarCon(tarjeta, fecha);
+
+        Assert.That(resultado, Is.EqualTo(false));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(0)); // No se descontó nada
+    }
+
     [Test]
     public void Franquicia_NoPuedeViajar()
     {

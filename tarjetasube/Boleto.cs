@@ -3,7 +3,6 @@ public class Boleto
     public DateTime Fecha { get; set; }
     public string TarjetaTipo { get; set; }
     public int TotalAbonado { get; set; }
-    public int Tarifa => TotalAbonado;
     public int LineaColectivo { get; set; }
     public decimal SaldoRestante { get; set; }
     public int IdTarjeta { get; set; }
