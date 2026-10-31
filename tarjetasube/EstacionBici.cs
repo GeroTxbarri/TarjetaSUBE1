@@ -9,22 +9,36 @@ public class EstacionBici
         return retirarBici(tarjeta, DateTime.Now);
     }
 
-    public bool retirarBici(Tarjeta tarjeta, DateTime fecha)
+        public bool retirarBici(Tarjeta tarjeta, DateTime fecha)
     {
         if (tarjeta.InicioUsoBici != null)
         {
             return false;
         }
 
-        if (tarjeta.UltimoPagoBici.Date != fecha.Date)
+        decimal aCobrar = 0;
+        bool esNuevoDia = tarjeta.UltimoPagoBici.Date != fecha.Date;
+
+        if (esNuevoDia)
         {
-            decimal total = Tarifa + Multa * tarjeta.MultasBici;
-            if (!tarjeta.descontarSaldo(total))
+            aCobrar += Tarifa;
+        }
+        if (tarjeta.MultasBici > 0)
+        {
+            aCobrar += Multa * tarjeta.MultasBici;
+        }
+
+        if (aCobrar > 0)
+        {
+            if (!tarjeta.descontarSaldo(aCobrar))
             {
                 return false;
             }
             tarjeta.MultasBici = 0;
-            tarjeta.UltimoPagoBici = fecha;
+            if (esNuevoDia)
+            {
+                tarjeta.UltimoPagoBici = fecha;
+            }
         }
 
         tarjeta.InicioUsoBici = fecha;
