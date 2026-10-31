@@ -2,6 +2,7 @@ public class Colectivo
 {
     protected int Tarifa = 2150;
 
+    public int Id { get; set; }
     public int Linea_numero { get; set; }
 
     public dynamic pagarCon(Tarjeta tarjeta)
