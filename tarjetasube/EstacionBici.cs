@@ -30,10 +30,11 @@ public class EstacionBici
 
         if (aCobrar > 0)
         {
-            if (!tarjeta.descontarSaldo(aCobrar))
+            if (tarjeta.Saldo < aCobrar)
             {
                 return false;
             }
+            tarjeta.Saldo -= aCobrar;
             tarjeta.MultasBici = 0;
             if (esNuevoDia)
             {
