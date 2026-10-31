@@ -302,4 +302,79 @@ public class EstacionBiciTests
         Assert.That(tarjeta.Saldo, Is.EqualTo(56000));
         Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(4000 - 2418.75m));
     }
+
+    // =====================================================================
+    // 5. METODOS SIN FECHA - usan la hora actual
+    // =====================================================================
+
+    [Test]
+    public void RetirarBici_SinFecha_CobraLaTarifaYPermiteRetiro()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var estacion = new EstacionBici();
+
+        var resultado = estacion.retirarBici(tarjeta);
+
+        Assert.That(resultado, Is.True);
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 2418.75m));
+        Assert.That(tarjeta.InicioUsoBici, Is.Not.Null);
+    }
+
+    [Test]
+    public void RetirarBici_SinFecha_SinSaldo_NoPermiteRetiro()
+    {
+        var tarjeta = new Tarjeta(); // Saldo = 0
+
+        var estacion = new EstacionBici();
+
+        var resultado = estacion.retirarBici(tarjeta);
+
+        Assert.That(resultado, Is.False);
+        Assert.That(tarjeta.InicioUsoBici, Is.Null);
+    }
+
+    [Test]
+    public void DevolverBici_SinFecha_DentroDelLimite_NoGeneraMulta()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var estacion = new EstacionBici();
+
+        estacion.retirarBici(tarjeta);
+        estacion.devolverBici(tarjeta);
+
+        Assert.That(tarjeta.MultasBici, Is.EqualTo(0));
+        Assert.That(tarjeta.InicioUsoBici, Is.Null);
+    }
+
+    [Test]
+    public void DevolverBici_SinFecha_PasadoElLimite_GeneraMulta()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var estacion = new EstacionBici();
+
+        estacion.retirarBici(tarjeta, DateTime.Now.AddHours(-2)); // La retiro hace 2 horas
+        estacion.devolverBici(tarjeta);
+
+        Assert.That(tarjeta.MultasBici, Is.EqualTo(1));
+        Assert.That(tarjeta.InicioUsoBici, Is.Null);
+    }
+
+    [Test]
+    public void DevolverBici_SinFecha_SinHaberRetirado_NoGeneraMulta()
+    {
+        var tarjeta = new Tarjeta();
+
+        var estacion = new EstacionBici();
+
+        estacion.devolverBici(tarjeta);
+
+        Assert.That(tarjeta.MultasBici, Is.EqualTo(0));
+        Assert.That(tarjeta.InicioUsoBici, Is.Null);
+    }
 }
