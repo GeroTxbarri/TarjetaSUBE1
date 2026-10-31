@@ -1,12 +1,12 @@
 public class Tarjeta {
 
-    public int Saldo { get; set; }
+    public decimal Saldo { get; set; }
     public int Id { get; set; }
     public int TarjetaTipoId { get; set; }
     public TarjetaTipo Tipo { get; set; }
 
     public const int LimiteSaldo = 56000;
-    public int SaldoPendiente { get; set; } = 0;
+    public decimal SaldoPendiente { get; set; } = 0;
 
     public DateTime UltimoViaje { get; set; } = DateTime.MinValue;
     public int ViajesHoy { get; set; } = 0;
@@ -14,6 +14,10 @@ public class Tarjeta {
 
     public int UltimaLinea { get; set; } = -1;
     public DateTime? InicioVentanaTrasbordo { get; set; } = null;
+
+    public DateTime? InicioUsoBici { get; set; } = null;
+    public DateTime UltimoPagoBici { get; set; } = DateTime.MinValue;
+    public int MultasBici { get; set; } = 0;
 
     int[] montoValidos = {2000,3000,4000,5000,8000,10000,15000,20000,25000,30000};
 
@@ -37,7 +41,7 @@ public class Tarjeta {
         
         
     }
-    public bool descontarSaldo (int monto){
+    public bool descontarSaldo (decimal monto){
         if ((Saldo - monto) >= -2000){
             Saldo -= monto;
             AcreditarCarga();
@@ -121,8 +125,8 @@ public class Tarjeta {
     public void AcreditarCarga (){
         if (SaldoPendiente > 0  && Saldo <= LimiteSaldo){
 
-            int saldolibre = LimiteSaldo-Saldo;
-            int saldoacreditar = Math.Min(saldolibre, SaldoPendiente);
+            decimal saldolibre = LimiteSaldo-Saldo;
+            decimal saldoacreditar = Math.Min(saldolibre, SaldoPendiente);
             Saldo += saldoacreditar;
             SaldoPendiente -= saldoacreditar;
 
