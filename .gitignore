@@ -1,0 +1,4 @@
+## Base de datos local (SQLite)
+*.db
+*.db-shm
+*.db-wal
