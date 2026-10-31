@@ -35,6 +35,7 @@ public class EstacionBici
                 return false;
             }
             tarjeta.Saldo -= aCobrar;
+            tarjeta.AcreditarCarga();
             tarjeta.MultasBici = 0;
             if (esNuevoDia)
             {

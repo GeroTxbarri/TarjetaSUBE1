@@ -18,7 +18,7 @@ public class Colectivo
 
         bool transbordo = tarjeta.esTrasbordo(Linea_numero, fecha);
         
-        int precio = 0;
+        decimal precio = 0;
         if (!transbordo){
             precio = tarjeta.calcularPrecio(Tarifa, fecha);
         }
