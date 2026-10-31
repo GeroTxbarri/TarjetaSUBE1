@@ -53,21 +53,21 @@ public class Tarjeta {
          
     }
 
-    public int calcularPrecio (int tarifa, DateTime fecha){
+    public decimal calcularPrecio (int tarifa, DateTime fecha){
         if (!esFranquicia()){
             int numeroDeViaje = viajesDelMes(fecha) + 1;
             if (numeroDeViaje >= 80){
-                return tarifa - tarifa * 25 / 100;
+                return tarifa - tarifa * 25m / 100;
             }
             if (numeroDeViaje >= 30){
-                return tarifa - tarifa * 20 / 100;
+                return tarifa - tarifa * 20m / 100;
             }
             return tarifa;
         }
         if (Tipo.ViajesConDescuentoPorDia > 0 && viajesDelDia(fecha) >= Tipo.ViajesConDescuentoPorDia){
             return tarifa;
         }
-        int descuento = tarifa * Tipo.PorcentajeDescuento / 100;
+        decimal descuento = tarifa * (decimal)Tipo.PorcentajeDescuento / 100;
         return tarifa - descuento;
     }
 

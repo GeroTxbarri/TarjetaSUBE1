@@ -134,8 +134,9 @@ public class TarjetaTests
         var boleto80 = colectivo.pagarCon(tarjeta, hora.AddMinutes(80));
         var boleto81 = colectivo.pagarCon(tarjeta, hora.AddMinutes(81));
 
-        Assert.That(boleto80.TotalAbonado, Is.EqualTo(2150 - 2150 * 25 / 100));
-        Assert.That(boleto81.TotalAbonado, Is.EqualTo(2150 - 2150 * 25 / 100));
+        Assert.That(boleto80.TotalAbonado, Is.EqualTo(1612.5m));
+        Assert.That(boleto81.TotalAbonado, Is.EqualTo(1612.5m));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(150000 - 29 * 2150 - 50 * 1720 - 1612.5m * 2));
     }
 
     [Test]

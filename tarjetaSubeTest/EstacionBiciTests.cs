@@ -285,4 +285,21 @@ public class EstacionBiciTests
         // Cobra la tarifa completa ($2418.75), sin descuento del 50% del medio boleto
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 2418.75m));
     }
+
+    [Test]
+    public void RetirarBici_ConSaldoPendiente_AcreditaHastaElMaximo()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(30000);
+        tarjeta.cargarTarjeta(30000); // Saldo 56000, quedan 4000 pendientes
+
+        var estacion = new EstacionBici();
+        var fecha = new DateTime(2026, 11, 1, 9, 0, 0);
+
+        var resultado = estacion.retirarBici(tarjeta, fecha);
+
+        Assert.That(resultado, Is.True);
+        Assert.That(tarjeta.Saldo, Is.EqualTo(56000));
+        Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(4000 - 2418.75m));
+    }
 }
