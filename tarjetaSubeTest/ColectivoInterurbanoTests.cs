@@ -94,4 +94,19 @@ public class ColectivoInterurbanoTests
         Assert.That(resultado, Is.EqualTo(false));
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000));
     }
+
+    [Test]
+    public void PagarSinFecha_UsaLaFechaDelReloj()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var reloj = new ProveedorDeFechaFijo { Ahora = new DateTime(2026, 10, 22, 10, 0, 0) };
+        var colectivo = new ColectivoInterUrbano(reloj) { Linea_numero = 101 };
+
+        var boleto = colectivo.pagarCon(tarjeta);
+
+        Assert.That(boleto.TotalAbonado, Is.EqualTo(3000));
+        Assert.That(boleto.Fecha, Is.EqualTo(reloj.Ahora));
+    }
 }

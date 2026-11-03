@@ -91,4 +91,17 @@ public class ColectivoTests
         Assert.That(resultado, Is.EqualTo(false));
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000)); // No se descontó
     }
+
+    [Test]
+    public void PagarCon_QuedaJustoEnMenos2000_DevuelveBoleto()
+    {
+        // $150 - $2150 = -$2000, justo en el limite permitido
+        var tarjeta = new Tarjeta { Saldo = 150 };
+
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var boleto = colectivo.pagarCon(tarjeta, FechaValida);
+
+        Assert.That(boleto.TotalAbonado, Is.EqualTo(2150));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(-2000));
+    }
 }

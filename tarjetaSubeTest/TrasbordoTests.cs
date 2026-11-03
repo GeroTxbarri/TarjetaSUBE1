@@ -200,4 +200,104 @@ public class TrasbordoTests
         Assert.That(boleto2.EsTrasbordo, Is.True);
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 1075));
     }
+
+    [Test]
+    public void Sabado_PermiteTrasbordo()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo1 = new Colectivo { Linea_numero = 101 };
+        var colectivo2 = new Colectivo { Linea_numero = 102 };
+
+        var sabado1 = new DateTime(2026, 10, 24, 10, 0, 0); // Sabado
+        var sabado2 = new DateTime(2026, 10, 24, 10, 20, 0);
+
+        colectivo1.pagarCon(tarjeta, sabado1);
+        var boleto2 = colectivo2.pagarCon(tarjeta, sabado2);
+
+        Assert.That(boleto2.TotalAbonado, Is.EqualTo(0));
+        Assert.That(boleto2.EsTrasbordo, Is.True);
+    }
+
+    [Test]
+    public void JustoALas7_EsTrasbordo()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo1 = new Colectivo { Linea_numero = 101 };
+        var colectivo2 = new Colectivo { Linea_numero = 102 };
+
+        var hora1 = new DateTime(2026, 10, 22, 6, 50, 0);
+        var hora2 = new DateTime(2026, 10, 22, 7, 0, 0); // Justo cuando empieza el horario
+
+        colectivo1.pagarCon(tarjeta, hora1);
+        var boleto2 = colectivo2.pagarCon(tarjeta, hora2);
+
+        Assert.That(boleto2.TotalAbonado, Is.EqualTo(0));
+        Assert.That(boleto2.EsTrasbordo, Is.True);
+    }
+
+    [Test]
+    public void ALas2159_EsTrasbordo()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo1 = new Colectivo { Linea_numero = 101 };
+        var colectivo2 = new Colectivo { Linea_numero = 102 };
+
+        var hora1 = new DateTime(2026, 10, 22, 21, 30, 0);
+        var hora2 = new DateTime(2026, 10, 22, 21, 59, 0); // Ultimo minuto del horario
+
+        colectivo1.pagarCon(tarjeta, hora1);
+        var boleto2 = colectivo2.pagarCon(tarjeta, hora2);
+
+        Assert.That(boleto2.TotalAbonado, Is.EqualTo(0));
+        Assert.That(boleto2.EsTrasbordo, Is.True);
+    }
+
+    [Test]
+    public void JustoALaHora_EsTrasbordo()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo1 = new Colectivo { Linea_numero = 101 };
+        var colectivo2 = new Colectivo { Linea_numero = 102 };
+
+        var hora1 = new DateTime(2026, 10, 22, 10, 0, 0);
+        var hora2 = new DateTime(2026, 10, 22, 11, 0, 0); // Exactamente 1 hora despues
+
+        colectivo1.pagarCon(tarjeta, hora1);
+        var boleto2 = colectivo2.pagarCon(tarjeta, hora2);
+
+        Assert.That(boleto2.TotalAbonado, Is.EqualTo(0));
+        Assert.That(boleto2.EsTrasbordo, Is.True);
+    }
+
+    [Test]
+    public void LaHoraSeCuentaDesdeElPrimerBoleto_NoDesdeElTrasbordo()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var colectivo1 = new Colectivo { Linea_numero = 101 };
+        var colectivo2 = new Colectivo { Linea_numero = 102 };
+        var colectivo3 = new Colectivo { Linea_numero = 103 };
+
+        var hora1 = new DateTime(2026, 10, 22, 10, 0, 0);
+        var hora2 = new DateTime(2026, 10, 22, 10, 40, 0); // Trasbordo
+        var hora3 = new DateTime(2026, 10, 22, 11, 10, 0); // 70 min del primero, 30 min del trasbordo
+
+        colectivo1.pagarCon(tarjeta, hora1);
+        var boleto2 = colectivo2.pagarCon(tarjeta, hora2);
+        var boleto3 = colectivo3.pagarCon(tarjeta, hora3);
+
+        Assert.That(boleto2.EsTrasbordo, Is.True);
+        Assert.That(boleto3.EsTrasbordo, Is.False);
+        Assert.That(boleto3.TotalAbonado, Is.EqualTo(2150));
+        Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 2150 * 2));
+    }
 }

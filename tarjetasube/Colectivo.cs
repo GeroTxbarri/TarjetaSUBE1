@@ -1,13 +1,21 @@
 public class Colectivo
 {
     protected int Tarifa = 2150;
+    protected IProveedorDeFecha Reloj = new ProveedorDeFechaSistema();
 
     public int Id { get; set; }
     public int Linea_numero { get; set; }
 
+    public Colectivo() { }
+
+    public Colectivo(IProveedorDeFecha reloj)
+    {
+        Reloj = reloj;
+    }
+
     public dynamic pagarCon(Tarjeta tarjeta)
     {
-        return pagarCon(tarjeta, DateTime.Now);
+        return pagarCon(tarjeta, Reloj.Ahora);
     }
 
     public dynamic pagarCon(Tarjeta tarjeta, DateTime fecha)

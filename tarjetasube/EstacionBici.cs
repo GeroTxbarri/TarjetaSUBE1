@@ -3,10 +3,18 @@ public class EstacionBici
     private decimal Tarifa = 2418.75m;
     private decimal Multa = 1250;
     private int MinutosMaximos = 60;
+    private IProveedorDeFecha Reloj = new ProveedorDeFechaSistema();
+
+    public EstacionBici() { }
+
+    public EstacionBici(IProveedorDeFecha reloj)
+    {
+        Reloj = reloj;
+    }
 
     public bool retirarBici(Tarjeta tarjeta)
     {
-        return retirarBici(tarjeta, DateTime.Now);
+        return retirarBici(tarjeta, Reloj.Ahora);
     }
 
         public bool retirarBici(Tarjeta tarjeta, DateTime fecha)
@@ -49,7 +57,7 @@ public class EstacionBici
 
     public void devolverBici(Tarjeta tarjeta)
     {
-        devolverBici(tarjeta, DateTime.Now);
+        devolverBici(tarjeta, Reloj.Ahora);
     }
 
     public void devolverBici(Tarjeta tarjeta, DateTime fecha)
