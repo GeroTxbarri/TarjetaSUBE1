@@ -173,4 +173,21 @@ public class TarjetaTests
 
         Assert.That(boleto30.TotalAbonado, Is.EqualTo(2150));
     }
+
+    [Test]
+    public void usoFrecuente_mismoMesDeOtroAnio_SeReinicia(){
+        var tarjeta = new Tarjeta();
+        for (int i = 0; i < 5; i++){
+            tarjeta.cargarTarjeta(30000);
+        }
+        var colectivo = new Colectivo { Linea_numero = 67 };
+        var hora = new DateTime(2026, 10, 1, 10, 0, 0);
+
+        for (int viaje = 1; viaje <= 35; viaje++){
+            colectivo.pagarCon(tarjeta, hora.AddMinutes(viaje));
+        }
+        var boletoOtroAnio = colectivo.pagarCon(tarjeta, new DateTime(2027, 10, 1, 10, 0, 0));
+
+        Assert.That(boletoOtroAnio.TotalAbonado, Is.EqualTo(2150));
+    }
 }

@@ -9,7 +9,8 @@ public class TarjetaTipoTests
         var tarjeta = new Tarjeta();
         tarjeta.cargarTarjeta(5000);
 
-        var colectivo = new Colectivo { Linea_numero = 67 };
+        var reloj = new ProveedorDeFechaFijo { Ahora = new DateTime(2026, 10, 22, 10, 0, 0) };
+        var colectivo = new Colectivo(reloj) { Linea_numero = 67 };
         var boleto = colectivo.pagarCon(tarjeta);
 
         Assert.That(tarjeta.TarjetaTipoId, Is.EqualTo(1));

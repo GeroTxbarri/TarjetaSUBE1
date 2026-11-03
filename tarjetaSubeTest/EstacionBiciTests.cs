@@ -304,7 +304,7 @@ public class EstacionBiciTests
     }
 
     // =====================================================================
-    // 5. METODOS SIN FECHA - usan la hora actual
+    // 5. METODOS SIN FECHA - usan la fecha del reloj de la estacion
     // =====================================================================
 
     [Test]
@@ -313,13 +313,14 @@ public class EstacionBiciTests
         var tarjeta = new Tarjeta();
         tarjeta.cargarTarjeta(5000);
 
-        var estacion = new EstacionBici();
+        var reloj = new ProveedorDeFechaFijo { Ahora = new DateTime(2026, 11, 2, 9, 0, 0) };
+        var estacion = new EstacionBici(reloj);
 
         var resultado = estacion.retirarBici(tarjeta);
 
         Assert.That(resultado, Is.True);
         Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - 2418.75m));
-        Assert.That(tarjeta.InicioUsoBici, Is.Not.Null);
+        Assert.That(tarjeta.InicioUsoBici, Is.EqualTo(reloj.Ahora));
     }
 
     [Test]
@@ -327,7 +328,8 @@ public class EstacionBiciTests
     {
         var tarjeta = new Tarjeta(); // Saldo = 0
 
-        var estacion = new EstacionBici();
+        var reloj = new ProveedorDeFechaFijo { Ahora = new DateTime(2026, 11, 2, 9, 0, 0) };
+        var estacion = new EstacionBici(reloj);
 
         var resultado = estacion.retirarBici(tarjeta);
 
@@ -341,9 +343,11 @@ public class EstacionBiciTests
         var tarjeta = new Tarjeta();
         tarjeta.cargarTarjeta(5000);
 
-        var estacion = new EstacionBici();
+        var reloj = new ProveedorDeFechaFijo { Ahora = new DateTime(2026, 11, 2, 9, 0, 0) };
+        var estacion = new EstacionBici(reloj);
 
         estacion.retirarBici(tarjeta);
+        reloj.Ahora = reloj.Ahora.AddMinutes(30); // La devuelve a los 30 minutos
         estacion.devolverBici(tarjeta);
 
         Assert.That(tarjeta.MultasBici, Is.EqualTo(0));
@@ -356,9 +360,11 @@ public class EstacionBiciTests
         var tarjeta = new Tarjeta();
         tarjeta.cargarTarjeta(5000);
 
-        var estacion = new EstacionBici();
+        var reloj = new ProveedorDeFechaFijo { Ahora = new DateTime(2026, 11, 2, 9, 0, 0) };
+        var estacion = new EstacionBici(reloj);
 
-        estacion.retirarBici(tarjeta, DateTime.Now.AddHours(-2)); // La retiro hace 2 horas
+        estacion.retirarBici(tarjeta);
+        reloj.Ahora = reloj.Ahora.AddHours(2); // La devuelve a las 2 horas
         estacion.devolverBici(tarjeta);
 
         Assert.That(tarjeta.MultasBici, Is.EqualTo(1));
@@ -370,11 +376,45 @@ public class EstacionBiciTests
     {
         var tarjeta = new Tarjeta();
 
-        var estacion = new EstacionBici();
+        var reloj = new ProveedorDeFechaFijo { Ahora = new DateTime(2026, 11, 2, 9, 0, 0) };
+        var estacion = new EstacionBici(reloj);
 
         estacion.devolverBici(tarjeta);
 
         Assert.That(tarjeta.MultasBici, Is.EqualTo(0));
         Assert.That(tarjeta.InicioUsoBici, Is.Null);
+    }
+
+    // =====================================================================
+    // 6. CASOS LIMITE
+    // =====================================================================
+
+    [Test]
+    public void RetirarYDevolver_A61Minutos_GeneraMulta()
+    {
+        var tarjeta = new Tarjeta();
+        tarjeta.cargarTarjeta(5000);
+
+        var estacion = new EstacionBici();
+        var inicio = new DateTime(2026, 11, 1, 9, 0, 0);
+
+        estacion.retirarBici(tarjeta, inicio);
+        estacion.devolverBici(tarjeta, inicio.AddMinutes(61)); // Un minuto pasado del limite
+
+        Assert.That(tarjeta.MultasBici, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void RetirarBici_ConElSaldoJusto_PermiteRetiro()
+    {
+        var tarjeta = new Tarjeta { Saldo = 2418.75m }; // Exactamente la tarifa
+
+        var estacion = new EstacionBici();
+        var fecha = new DateTime(2026, 11, 1, 9, 0, 0);
+
+        var resultado = estacion.retirarBici(tarjeta, fecha);
+
+        Assert.That(resultado, Is.True);
+        Assert.That(tarjeta.Saldo, Is.EqualTo(0));
     }
 }

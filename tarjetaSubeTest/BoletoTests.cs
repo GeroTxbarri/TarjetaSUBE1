@@ -9,7 +9,8 @@ public class BoletoTests
         var tarjeta = new Tarjeta { Id = 1 };
         tarjeta.cargarTarjeta(5000);
 
-        var colectivo = new Colectivo { Linea_numero = 1 };
+        var reloj = new ProveedorDeFechaFijo { Ahora = new DateTime(2026, 10, 22, 10, 0, 0) };
+        var colectivo = new Colectivo(reloj) { Linea_numero = 1 };
         var boleto = colectivo.pagarCon(tarjeta);
 
         Assert.That(boleto.TotalAbonado, Is.EqualTo(2150));
@@ -17,7 +18,7 @@ public class BoletoTests
         Assert.That(boleto.TarjetaTipo, Is.EqualTo("Normal"));
         Assert.That(boleto.IdTarjeta, Is.EqualTo(1));
         Assert.That(boleto.SaldoRestante, Is.EqualTo(5000 - 2150));
-        Assert.That(boleto.Fecha.Date, Is.EqualTo(DateTime.Today));
+        Assert.That(boleto.Fecha, Is.EqualTo(reloj.Ahora));
     }
 
     [Test]
@@ -82,7 +83,8 @@ public class BoletoTests
     {
         var tarjeta = new Tarjeta { Id = 5, Saldo = 500 };
 
-        var colectivo = new Colectivo { Linea_numero = 5 };
+        var reloj = new ProveedorDeFechaFijo { Ahora = new DateTime(2026, 10, 22, 10, 0, 0) };
+        var colectivo = new Colectivo(reloj) { Linea_numero = 5 };
         var boleto = colectivo.pagarCon(tarjeta);
 
         Assert.That(boleto.TotalAbonado, Is.EqualTo(2150));
@@ -90,6 +92,6 @@ public class BoletoTests
         Assert.That(boleto.TarjetaTipo, Is.EqualTo("Normal"));
         Assert.That(boleto.IdTarjeta, Is.EqualTo(5));
         Assert.That(boleto.SaldoRestante, Is.EqualTo(500 - 2150));
-        Assert.That(boleto.Fecha.Date, Is.EqualTo(DateTime.Today));
+        Assert.That(boleto.Fecha, Is.EqualTo(reloj.Ahora));
     }
 }
